@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
+    <defs>
+        <linearGradient id="touch-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#7c3aed;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+        </linearGradient>
+
+        <filter id="touch-shadow">
+            <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.1" />
+        </filter>
+    </defs>
+
+    <text
+        x="50%"
+        y="58%"
+        text-anchor="middle"
+        font-size="120"
+        font-family="Inter, system-ui, sans-serif"
+        font-weight="800"
+        fill="url(#touch-gradient)"
+        filter="url(#touch-shadow)"
+        style="letter-spacing: -0.04em;">A</text>
+
+    <circle
+        cx="130"
+        cy="65"
+        r="4"
+        fill="#8b5cf6"
+        opacity="0.7" />
+</svg>
