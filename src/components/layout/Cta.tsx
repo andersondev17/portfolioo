@@ -86,7 +86,7 @@ export const Cta: React.FC<React.ComponentProps<typeof Column>> = ({ ...flex }) 
                         variant="primary"
                         weight="default"
                         size="m"
-                        href="AndersonLopezCV.pdf" download arrowIcon>
+                        href="/AndersonLopezCV.pdf" download arrowIcon>
                         📄 Download CV
                     </Button>
                     <Button href={`mailto:${person.email}`} variant="primary"
