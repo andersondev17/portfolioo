@@ -45,6 +45,7 @@ const home: Home = {
   label: "Home",
   title: `${person.name} | Software Developer`,
   description: `Portfolio website showcasing my work as a ${person.role}`,
+  status: "published",
   headline: <>Hey there! I'm Anderson.</>,
   featured: {
     display: true,
@@ -69,6 +70,7 @@ const about: About = {
   label: "About",
   title: `About me`,
   description: `Meet ${person.name}, ${person.role} from ${person.location}`,
+  status: "",
   tableOfContent: {
     display: true,
     subItems: false,
@@ -136,6 +138,7 @@ const work: Work = {
   label: "Work",
   title: `Projects – ${person.name}`,
   description: `Design and dev projects by ${person.name}`,
+  status: "",
   // Create new project pages by adding a new .mdx file to app/projects/posts
   // All projects will be listed on the /home and /work routes
 };
@@ -145,6 +148,7 @@ const gallery: Gallery = {
   label: "Gallery",
   title: `Photo gallery – ${person.name}`,
   description: `A photo collection by ${person.name}`,
+  status: "",
   images: [
     {
       src: "/images/gallery/horizontal-1.jpg",

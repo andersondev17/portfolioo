@@ -39,6 +39,7 @@ export default function About() {
         baseURL={baseURL}
         title={about.title}
         description={about.description}
+        status={about.status}
         path={about.path}
         image={`/api/og/generate?title=${encodeURIComponent(about.title)}`}
         author={{

@@ -76,6 +76,7 @@ export interface BasePageConfig {
   title: string;
   /** Description for SEO and metadata */
   description: string;
+  status: string;
   /** OG Image should be put inside `public/images` folder */
   image?: `/images/${string}` | string;
 }

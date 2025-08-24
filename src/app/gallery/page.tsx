@@ -1,6 +1,6 @@
-import { Flex, Meta, Schema } from "@once-ui-system/core";
 import MasonryGrid from "@/components/gallery/MasonryGrid";
 import { baseURL, gallery, person } from "@/resources";
+import { Flex, Meta, Schema } from "@once-ui-system/core";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -20,6 +20,7 @@ export default function Gallery() {
         baseURL={baseURL}
         title={gallery.title}
         description={gallery.description}
+        status={gallery.status}
         path={gallery.path}
         image={`/api/og/generate?title=${encodeURIComponent(gallery.title)}`}
         author={{
