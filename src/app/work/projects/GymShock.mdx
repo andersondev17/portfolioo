@@ -1,7 +1,9 @@
 ---
-title: "GymShock: Fitness Plataform."
+title: "GymShock: Fitness Platform"
 publishedAt: "2025-08-22"
-summary: "Fitness Plataform solution with 1300+ excercises, personalized assessment system, , and enterprise security. Features RBAC authentication, real-time search, and scalable architecture supporting UN Sustainable Development Goals."
+summary: "Fitness platform addressing obesity in Colombia through technology-driven democratization of health. Features include psychological barrier removal, personalized assessment system, and vertically scalable architecture aligned with UN SDGs."
+status: "In Development - Core MVP Functional"
+
 team:
   - name: "Anderson Lopez"
     role: "Software Engineer"
@@ -17,24 +19,37 @@ link: "https://gymshock-kap4.vercel.app/"
 
 ## Overview
 
-GymShock is a fitness platform addressing UN Sustainable Development Goals through technology-driven health democratization. Combines personalized workout assessment system with 1300+ educational exercises, supporting SDG 3 (Health & Well-being) and SDG 8 (Decent Work). Features enterprise security, centralized design tokens, and scalable architecture empowering both individuals and fitness professionals.
+In Colombia, 60% of people face obesity and 70% abandon fitness programs due to mental barriers. GymShock eliminates the fear of judgment that prevents individuals from starting their fitness journey, combining enterprise-grade security together with empathetic design to democratize expert fitness guidance. Created to support UN SDG 3 (Health & Well-being) and SDG 8 (Decent Work), the platform serves both individuals seeking inclusive fitness access and trainers needing digital tools to expand practice.
+
+**Current Status:** Active development with functional exercise database, user authentication, security and core assessment features implemented.
+
 ## Key Features
 
-- **Architecture**: Implemented comprehensive security stack including DDoS protection, intelligent bot detection, rate limiting algorithms, and real-time threat monitorin, Passport.js multi-provider authentication with OAuth2, and RBAC system supporting User/Trainer/Admin roles .
-- **Health Assessment System**: Developed survey-based workout generator that creates customized training routines based on individual needs, fitness levels, and health goals along with an exercise library with detailed instructions, muscle group targeting, form guidance, and related exercise suggestions. Promotes inclusive fitness access regardless of experience level, directly supporting SDG 3 by democratizing professional-grade fitness guidance.*: 
-- **Theming and Customization**: Integrated a centralized Tailwind CSS tokens for scalable theming that allows easy switching and customization
-- **Responsive Design**: Magic Portfolio is fully responsive across devices.
+- **Remove Psychological Barriers**: Personal assessment system that adapts to the user's level, creating safe entry points for beginners who fear gym judgment.
+- **Enterprise Security Architecture**: End-to-end security with DDoS protection, bot detection, rate limiting, and Passport.js multi-provider authentication of User/Trainer/Admin roles through an RBAC system.
+- **Personalized Assessment Engine**: Personalized workouts generated through a survey-based assessment engine based on individual needs, fitness levels, and psychological comfort zones featuring 1300+ exercises, detailed instructions and progressive difficulty scaling.
+- **Inclusive Design System**: Centralized Tailwind CSS tokens for consistency across the app, ensuring accessibility and responsive design that works for users on any device and level of technical competence.
+- **Empowerment Tools**: Trainer dashboard enabling fitness professionals to digitize work with multiple clients at a distance, and build scalable income streams while maintaining personal connection with their expertise. *(In Development)*
+
 ## Technologies Used
 
-- **Frontend**: Next.js 15, React 19, TypeScript .
-- **Backend**: : Node.js + Express, MongoDB with optimizarions for high traffic scenarios.
-- **Security**: Protection with rate limiting and threat detection.
-- **Design**: Centralized token system with Tailwind CSS for scalable theming.
+- **Frontend**: Next.js 15, React 19, TypeScript with mobile-first component design.
+- **Backend**: Node.js + Express, MongoDB, optimized for high-traffic scenarios and real-time search.
+- **Security**: Multi-layered security with rate limiting and bot detection and DDoS protection.
+- **Design**: Centralized token system enabling scalable theming and consistent user experience.
 
 ## Challenges and Learnings
 
-One key challenge was managing high traffic volumes and request patterns effectively. With 1300+ exercises and real-time search functionality, the platform needed protection against excessive requests that could overwhelm the system. The solution involved implementing intelligent rate limiting and request management to ensure consistent performance for all users while preventing system overload from automated traffic or excessive usage patterns.
-
+The core challenge isn't technical—it is human. Research showed that 7 out of 10 people avoid starting fitness programs due to fear of judgment, rather than because they don't have access to the exercises. This implied rethinking the whole process from scratch: instead of building another "no pain, no gain" platform, our vision is a system that respects psychological barriers while providing professional-grade guidance.
+The technical challenge is to deliver 1300+ exercises with response times less than a second. Caching methods are being implemented, MongoDB optimization, and rate limiting were used to address it.
 ## Outcome
 
-The design system is now actively used across multiple projects, leading to faster development cycles, fewer design inconsistencies, and improved collaboration between design and development teams. It has become a foundation for scaling our products efficiently while ensuring a cohesive user experience.
+GymShock can bridge the gap between technical and social impact. The platform demonstrates how this architecture can be used for the good of  vulnerable groups, with security measures that build trust rather than create barriers.
+
+**Project Impact**: Designed to create economic opportunities for fitness trainers at scale
+
+**Technical Achievements**: Scalable architecture designed to support concurrent users  with core systems achieving reliable uptime during development testing.
+
+This project shows how technology design can address society's challenges delivering business viability and social impact
+
+---

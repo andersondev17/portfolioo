@@ -1,10 +1,10 @@
-import { notFound } from "next/navigation";
-import { getPosts } from "@/utils/utils";
-import { Meta, Schema, AvatarGroup, Button, Column, Flex, Heading, Media, Text } from "@once-ui-system/core";
-import { baseURL, about, person, work } from "@/resources";
+import { CustomMDX, ScrollToHash } from "@/components";
+import { about, baseURL, person, work } from "@/resources";
 import { formatDate } from "@/utils/formatDate";
-import { ScrollToHash, CustomMDX } from "@/components";
+import { getPosts } from "@/utils/utils";
+import { AvatarGroup, Button, Column, Flex, Heading, Media, Meta, Schema, Text } from "@once-ui-system/core";
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const posts = getPosts(["src", "app", "work", "projects"]);
@@ -60,6 +60,7 @@ export default async function Project({
         path={`${work.path}/${post.slug}`}
         title={post.metadata.title}
         description={post.metadata.summary}
+        status={post.metadata.status}
         datePublished={post.metadata.publishedAt}
         dateModified={post.metadata.publishedAt}
         image={post.metadata.image || `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`}

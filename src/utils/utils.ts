@@ -1,6 +1,6 @@
 import fs from "fs";
-import path from "path";
 import matter from "gray-matter";
+import path from "path";
 
 type Team = {
   name: string;
@@ -13,6 +13,7 @@ type Metadata = {
   title: string;
   publishedAt: string;
   summary: string;
+  status: string;
   image?: string;
   images: string[];
   tag?: string;
@@ -42,6 +43,7 @@ function readMDXFile(filePath: string) {
     title: data.title || "",
     publishedAt: data.publishedAt,
     summary: data.summary || "",
+    status: data.status || "",
     image: data.image || "",
     images: data.images || [],
     tag: data.tag || [],
