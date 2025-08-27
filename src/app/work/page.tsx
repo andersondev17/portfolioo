@@ -21,7 +21,6 @@ export default function Work() {
         path={work.path}
         title={work.title}
         description={work.description}
-        status={work.status}
         image={`/api/og/generate?title=${encodeURIComponent(work.title)}`}
         author={{
           name: person.name,

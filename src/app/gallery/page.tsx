@@ -20,7 +20,6 @@ export default function Gallery() {
         baseURL={baseURL}
         title={gallery.title}
         description={gallery.description}
-        status={gallery.status}
         path={gallery.path}
         image={`/api/og/generate?title=${encodeURIComponent(gallery.title)}`}
         author={{

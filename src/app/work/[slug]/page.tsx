@@ -60,7 +60,6 @@ export default async function Project({
         path={`${work.path}/${post.slug}`}
         title={post.metadata.title}
         description={post.metadata.summary}
-        status={post.metadata.status}
         datePublished={post.metadata.publishedAt}
         dateModified={post.metadata.publishedAt}
         image={post.metadata.image || `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`}

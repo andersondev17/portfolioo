@@ -13,7 +13,6 @@ export default function Home() {
         path={home.path}
         title={home.title}
         description={home.description}
-        status={home.status}
         image={`/api/og/generate?title=${encodeURIComponent(home.title)}`}
         author={{
           name: person.name,
