@@ -59,8 +59,9 @@ const home: Home = {
   subline: (
     <>
       A bilingual Software Developer based in Colombia,{" "}
-      I craft scalable web
-      <br />solutions.
+      <br />  
+      specializing in scalable SaaS platforms and AI-driven products using Next.js and Node.js.
+
     </>
   ),
 };
@@ -88,11 +89,17 @@ const about: About = {
     description: (
       <>
         I'm a Colombia-based software developer who got into coding out of curiosity,
-        -Wondering why shome websites felt like they were stuck in 90' while others looked like pure magic a
-
-        Currently, I build web applications that solve real problems. My latest e-commerce project improved
+        -Wondering why some websites felt like they were stuck in 90' while others looked like pure magic.
+        <br />
+        I focus heavily on real results. My latest e-commerce project improved
         engagement by 30%—not because I used React (which I obviously did), but because I understood that
         behind every click is someone trying to buy anything at 2am.
+        <br />
+         I like taking ideas from the first concept all
+        the way to a polished product—whether that means designing a clean React interface or structuring reliable
+        backend microservices or server actions.
+        <br />
+        My goal is always the same: create fast, scalable, and meaningful tools that people actually enjoy using.
       </>
     ),
   },
@@ -106,11 +113,10 @@ const about: About = {
         role: "Data Analyst",
         achievements: [
           <>
-            Developed user interfaces using React, ensuring responsive applications and APIS consumption
-            Integration of tools such as JavaScript, TypeScript, HTML y CSS
+            Developed TypeScript APIs integrating legacy database systems with modern React frontend, reducing data entry time by 40%. 
           </>,
           <>
-            Managed data entry and document management with high accuracy, ensuring data integrity.
+            Worked across technical and operational workflows, including documentation validation, compliance checks, and internal tooling.
           </>,
         ],
         images: [],
@@ -123,12 +129,19 @@ const about: About = {
     institutions: [
       {
         name: "Politecnico Colombiano Jaime Isaza Cadavid",
-        description: <>Studied software engineering.</>,
+        description: <>B.S. in Informatics Engineering (Expected 2026).</>,
       },
       {
         name: "Meta",
-        description: <>Studied front-end software development and programming with Javascript.</>,
+        description: <>Meta Front-End Developer Professional Certificate, Remote <br />
+                       Meta Programming with JavaScript, Remote
+                       Meta HTML and CSS certification, Remote
+                </>,
       },
+      {
+        name: "Colombo Americano",
+        description: <>Ingles C1, Medellín, Antioquia.  (2019)</>,
+      }, 
     ],
   },
 };
@@ -136,8 +149,8 @@ const about: About = {
 const work: Work = {
   path: "/work",
   label: "Work",
-  title: `Projects – ${person.name}`,
-  description: `Design and dev projects by ${person.name}`,
+  title: `Works by – ${person.name}`,
+  description: `Discover my latest projects where design, technology, and creativity come together to craft engaging digital experiences.`,
   status: "",
   // Create new project pages by adding a new .mdx file to app/projects/posts
   // All projects will be listed on the /home and /work routes
