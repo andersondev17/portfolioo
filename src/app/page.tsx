@@ -1,4 +1,4 @@
-
+import { HeroSection } from "@/components/hero/HeroSection";
 import { Cta } from "@/components/layout/Cta";
 import { Projects } from "@/components/work/Projects";
 import { about, baseURL, home, person } from "@/resources";
@@ -20,8 +20,17 @@ export default function Home() {
           image: `${baseURL}${person.avatar}`,
         }}
       />
-      <Column fillWidth paddingY="24" gap="m">
-        <Column maxWidth="s">
+      
+      <Flex
+        fillWidth
+        paddingY="24"
+        gap="xl"
+        direction="row" // Horizontal en desktop
+        mobileDirection="column" // Stack en mobile
+        vertical="center"
+      >
+        {/* Columna izquierda */}
+        <Column maxWidth="s" gap="m">
           {home.featured.display && (
           <RevealFx fillWidth horizontal="start" paddingTop="16" paddingBottom="32" paddingLeft="12">
             <Badge background="brand-alpha-weak" paddingX="12" paddingY="4" onBackground="neutral-strong" textVariant="label-default-s" arrow={false}
@@ -64,11 +73,16 @@ export default function Home() {
             </Button>
           </RevealFx>
         </Column>
-      </Column>
+        {/* Columna R 3D  */}
+        <Column fillWidth>
+          <HeroSection />
+        </Column>
+      </Flex>
+      
       <RevealFx translateY="16" delay={0.6}>
         <Projects range={[1, 1]} />
       </RevealFx>
-      
+
       <Projects range={[2]} />
       <Cta />
     </Column>
