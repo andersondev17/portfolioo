@@ -2,12 +2,13 @@
 
 import NotFound from "@/app/not-found";
 import { protectedRoutes, routes } from "@/resources";
-import { Button, Column, Flex, Heading, PasswordInput, Spinner } from "@once-ui-system/core";
+import { Button, Column, Heading, PasswordInput } from "@once-ui-system/core";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { IntroLoader } from "./intro/IntroLoader";
 
 interface RouteGuardProps {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
@@ -17,23 +18,24 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
+  const [loadingStep, setLoadingStep] = useState<0 | 1 | 2>(0);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const performChecks = async () => {
-      setLoading(true);
+      setLoadingStep(0); // Loading world
       setIsRouteEnabled(false);
       setIsPasswordRequired(false);
       setIsAuthenticated(false);
 
       const checkRouteEnabled = () => {
         if (!pathname) return false;
+        setLoadingStep(1); // Spawning coins
 
         if (pathname in routes) {
           return routes[pathname as keyof typeof routes];
         }
 
-        const dynamicRoutes = [ "/work"] as const;
+        const dynamicRoutes = ["/work"] as const;
         for (const route of dynamicRoutes) {
           if (pathname?.startsWith(route) && routes[route]) {
             return true;
@@ -54,7 +56,7 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
           setIsAuthenticated(true);
         }
       }
-
+      setLoadingStep(2); // Ready!
       setLoading(false);
     };
 
@@ -77,16 +79,13 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
   };
 
   if (loading) {
-    return (
-      <Flex fillWidth paddingY="128" horizontal="center">
-        <Spinner />
-      </Flex>
-    );
+    return <IntroLoader stepIndex={loadingStep} />;
+
   }
 
   if (!isRouteEnabled) {
-		return <NotFound />;
-	}
+    return <NotFound />;
+  }
 
   if (isPasswordRequired && !isAuthenticated) {
     return (

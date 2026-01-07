@@ -24,21 +24,22 @@ const protectedRoutes: ProtectedRoutesConfig = {
 };
 
 // Import and set font for each variant
-import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { JetBrains_Mono, Manrope, Press_Start_2P, Space_Grotesk } from "next/font/google";
 
-const heading = Inter({
+const heading = Press_Start_2P ({
   variable: "--font-heading",
+  weight: "400",
   subsets: ["latin"],
   display: "swap",
 });
 
-const body = Inter({
+const body = Space_Grotesk({
   variable: "--font-body",
   subsets: ["latin"],
   display: "swap",
 });
 
-const label = Plus_Jakarta_Sans({
+const label = Manrope ({
   variable: "--font-label",
   subsets: ["latin"],
   display: "swap",
@@ -61,12 +62,12 @@ const fonts: FontsConfig = {
 // default customization applied to the HTML in the main layout.tsx
 const style: StyleConfig = {
   theme: "system", // dark | light | system
-  neutral: "slate", // sand | gray | slate | custom
-  brand: "indigo", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan | custom
-  accent: "cyan", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan | custom
-  solid: "contrast", // color | contrast
-  solidStyle: "flat", // flat | plastic
-  border: "rounded", // rounded | playful | conservative
+  neutral: "sand", // sand | gray | slate | custom
+  brand: "red", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan | custom
+  accent: "emerald", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan | custom
+  solid: "color", // color | contrast
+  solidStyle: "plastic", // flat | plastic
+  border: "playful", // rounded | playful | conservative
   surface: "filled", // filled | translucent
   transition: "all", // all | micro | macro
   scaling: "105", // 90 | 95 | 100 | 105 | 110
@@ -95,20 +96,20 @@ const effects: EffectsConfig = {
   },
   gradient: {
     display: true,
-    opacity: 80,
+    opacity: 60,
     x: 50,
     y: 60,
     width: 100,
     height: 50,
     tilt: 0,
-    colorStart: "brand-background-strong",
+    colorStart: "neutral-background-strong",
     colorEnd: "page-background",
   },
   dots: {
     display: true,
-    opacity: 30,
+    opacity: 15,
     size: "1.5",
-    color: "brand-background-medium",
+    color: "accent-background-strong",
   },
   grid: {
     display: false,
@@ -153,8 +154,8 @@ const cta: CTAConfig = {
       width: 50,
       height: 50,
       tilt: 0,
-      colorStart: "accent-background-strong",
-      colorEnd: "static-transparent",
+      colorStart: "brand-background-strong",
+      colorEnd: "page-background",
     },
     dots: {
       display: true,
