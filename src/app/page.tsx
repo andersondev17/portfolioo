@@ -33,19 +33,19 @@ export default function Home() {
         <Column maxWidth="s" gap="m">
           {home.featured.display && (
           <RevealFx fillWidth horizontal="start" paddingTop="16" paddingBottom="32" paddingLeft="12">
-            <Badge background="brand-alpha-weak" paddingX="12" paddingY="4" onBackground="neutral-strong" textVariant="label-default-s" arrow={false}
+            <Badge background="brand-alpha-medium" paddingX="12" paddingY="4" onBackground="neutral-strong" textVariant="label-default-s" arrow={false}
               href={home.featured.href}>
               <Row paddingY="2">{home.featured.title}</Row>
             </Badge>
           </RevealFx>
           )}
           <RevealFx translateY="4" fillWidth horizontal="start" paddingBottom="16">
-            <Heading wrap="balance" variant="display-strong-l">
+            <Heading wrap="balance" variant="display-strong-m">
               {home.headline}
             </Heading>
           </RevealFx>
           <RevealFx translateY="8" delay={0.2} fillWidth horizontal="start" paddingBottom="32">
-            <Text wrap="balance" onBackground="neutral-weak" variant="heading-default-xl">
+            <Text wrap="balance" onBackground="neutral-weak" variant="heading-default-s">
               {home.subline}
             </Text>
           </RevealFx>

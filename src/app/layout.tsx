@@ -42,7 +42,7 @@ export default async function RootLayout({
         <link rel="icon" type="image/svg+xml" href="/trademarks/favicon.svg" />
         <link rel="apple-touch-icon" sizes="180x180" href="/trademarks/apple-touch-icon.png" />
 
-        <meta name="theme-color" content="#4f46e5" />
+        <meta name="theme-color" content="#0a0a0a" />
         <meta name="msapplication-TileColor" content="#4f46e5" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="Anderson Lopez" />

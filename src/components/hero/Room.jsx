@@ -12,10 +12,11 @@ import * as THREE from "three";
 export function Room(props) {
     const { nodes, materials } = useGLTF("/models/optimized-room.glb");
     const screensRef = useRef();
-    const matcapTexture = useTexture("/images/textures/mat1.png");
+    const matcapTexture = useTexture("/images/textures/mat1.jpg");
 
     const curtainMaterial = new THREE.MeshPhongMaterial({
-        color: "#d90429",
+        color: "#E52521", // Mario Red
+        shininess: 10
     });
 
     const bodyMaterial = new THREE.MeshPhongMaterial({
@@ -23,23 +24,31 @@ export function Room(props) {
     });
 
     const tableMaterial = new THREE.MeshPhongMaterial({
-        color: "#582f0e",
+        color: "#8B4513", // Brown for blocks
+        shininess: 20
     });
 
     const radiatorMaterial = new THREE.MeshPhongMaterial({
-        color: "#fff",
+        color: "#FFD700", // Coin Yellow
+        emissive: "#FFD700",
+        emissiveIntensity: 0.3,
+        shininess: 90
     });
 
     const compMaterial = new THREE.MeshStandardMaterial({
-        color: "#fff",
+        color: "#3B82F6", // Sky Blue
+        metalness: 0.8,
+        roughness: 0.2
     });
 
     const pillowMaterial = new THREE.MeshPhongMaterial({
-        color: "#8338ec",
+        color: "#E52521", // Mario Red
+        shininess: 30
     });
 
     const chairMaterial = new THREE.MeshPhongMaterial({
-        color: "#000",
+        color: "#0000FF", // Blue like Mario's overalls
+        shininess: 30
     });
 
     return (
