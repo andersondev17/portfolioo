@@ -51,7 +51,7 @@ const home: Home = {
     display: true,
     title: (
       <>
-        Recent project: <strong className="ml-4">GymShock</strong>
+        Recent project: <strong className="ml-4">AI Fitness App</strong>
       </>
     ),
     href: "/work/GymShock",

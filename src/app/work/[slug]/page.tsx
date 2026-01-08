@@ -53,7 +53,7 @@ export default async function Project({
     })) || [];
 
   return (
-    <Column as="section" maxWidth="m" horizontal="center" gap="l">
+    <Column as="section" maxWidth="xl" horizontal="center" gap="l">
       <Schema
         as="blogPosting"
         baseURL={baseURL}
@@ -69,11 +69,10 @@ export default async function Project({
           image: `${baseURL}${person.avatar}`,
         }}
       />
-      <Column maxWidth="xs" gap="16">
+      <Column maxWidth="xl" gap="16">
         <Button data-border="rounded" href="/work" variant="tertiary" weight="default" size="s" prefixIcon="chevronLeft">
           Projects
         </Button>
-        <Heading variant="display-strong-s">{post.metadata.title}</Heading>
       </Column>
       {post.metadata.images.length > 0 && (
         <Media
@@ -84,10 +83,11 @@ export default async function Project({
           src={post.metadata.images[0]}
         />
       )}
-      <Column style={{ margin: "auto" }} as="article" maxWidth="xs">
-        <Flex gap="12" marginBottom="24" vertical="center">
+      <Heading variant="display-strong-s">{post.metadata.title}</Heading>
+      <Column style={{ margin: "auto" }} as="article" maxWidth="m">
+        <Flex gap="12" marginBottom="24" vertical="center" onBackground="info-strong">
           {post.metadata.team && <AvatarGroup reverse avatars={avatars} size="m" />}
-          <Text variant="body-default-s" onBackground="neutral-weak">
+          <Text variant="body-default-s" onBackground="info-strong">
             {post.metadata.publishedAt && formatDate(post.metadata.publishedAt)}
           </Text>
         </Flex>

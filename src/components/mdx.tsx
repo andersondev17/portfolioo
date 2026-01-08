@@ -1,26 +1,26 @@
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc";
 import React, { ReactNode } from "react";
 
-import { 
-  Heading,
-  HeadingLink,
-  Text,
-  InlineCode,
-  CodeBlock,
-  TextProps,
-  MediaProps,
+import {
   Accordion,
   AccordionGroup,
-  Table,
-  Feedback,
   Button,
   Card,
-  Grid,
-  Row,
+  CodeBlock,
   Column,
+  Feedback,
+  Grid,
+  Heading,
+  HeadingLink,
   Icon,
+  InlineCode,
   Media,
+  MediaProps,
+  Row,
   SmartLink,
+  Table,
+  Text,
+  TextProps,
 } from "@once-ui-system/core";
 
 type CustomLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
@@ -109,10 +109,18 @@ function createParagraph({ children }: TextProps) {
     <Text
       style={{ lineHeight: "175%" }}
       variant="body-default-m"
-      onBackground="neutral-medium"
+      onBackground="info-strong"
       marginTop="8"
       marginBottom="12"
     >
+      {children}
+    </Text>
+  );
+}
+
+function createListItem({ children }: { children: ReactNode }) {
+  return (
+    <Text as="li" onBackground="info-strong" marginBottom="4">
       {children}
     </Text>
   );
@@ -153,6 +161,7 @@ function createCodeBlock(props: any) {
 
 const components = {
   p: createParagraph as any,
+  li: createListItem as any,
   h1: createHeading("h1") as any,
   h2: createHeading("h2") as any,
   h3: createHeading("h3") as any,
