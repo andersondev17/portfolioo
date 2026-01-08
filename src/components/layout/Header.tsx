@@ -4,9 +4,10 @@ import { Fade, Flex, Line, ToggleButton } from "@once-ui-system/core";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { about, display, gallery, person, routes, work } from "@/resources";
-import { ThemeToggle } from "../ThemeToggle";
 import styles from "./Header.module.scss";
+
 
 type TimeDisplayProps = {
   timeZone: string;
@@ -93,7 +94,7 @@ export const Header = () => {
           textVariant="body-default-s"
           className={`transition-opacity duration-300 ${isCompact ? 'opacity-0' : 'opacity-100'}`}
         >
-          {display.location && <Flex hide="s">{person.location}</Flex>}
+          {display.location && <Flex hide="s" onBackground="info-strong">{person.location}</Flex>}
         </Flex>
 
         {/* 🧭 MAIN NAV - Enhanced */}
@@ -183,7 +184,7 @@ export const Header = () => {
                 <>
                   {!isCompact && <Line background="neutral-alpha-medium" vert maxHeight="24" />}
                   <div className="transition-transform duration-200 hover:scale-110">
-                    <ThemeToggle />
+                    <AnimatedThemeToggler className="p-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors" />
                   </div>
                 </>
               )}
@@ -205,7 +206,7 @@ export const Header = () => {
             textVariant="body-default-s"
             gap="20"
           >
-            <Flex hide="s">
+            <Flex hide="s" onBackground="info-strong">
               {display.time && <TimeDisplay timeZone={person.location} />}
             </Flex>
           </Flex>

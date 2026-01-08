@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
 import { Column, Flex, Text } from "@once-ui-system/core";
+import React from "react";
 import styles from "./about.module.scss";
 
 interface TableOfContentsProps {
@@ -57,8 +57,9 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ structure, about }) =
               gap="8"
               vertical="center"
               onClick={() => scrollTo(section.title, 80)}
+              onBackground="info-strong"
             >
-              <Flex height="1" minWidth="16" background="neutral-strong"></Flex>
+              <Flex height="1" minWidth="16" background="info-strong"></Flex>
               <Text>{section.title}</Text>
             </Flex>
             {about.tableOfContent.subItems && (

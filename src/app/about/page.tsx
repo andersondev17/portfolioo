@@ -72,7 +72,7 @@ export default function About() {
             horizontal="center"
           >
             <Avatar src={person.avatar} size="xl" />
-            <Flex gap="8" vertical="center">
+            <Flex gap="8" vertical="center" onBackground="info-strong">
               <Icon onBackground="accent-weak" name="globe" />
               {person.location}
             </Flex>
@@ -111,7 +111,7 @@ export default function About() {
                 vertical="center"
               >
                 <Icon paddingLeft="12" name="calendar" onBackground="brand-weak" />
-                <Flex paddingX="8">Let's get in touch</Flex>
+                <Flex paddingX="8" onBackground="info-strong">Let's get in touch</Flex>
                 <IconButton
                   href={about.email.link}
                   data-border="rounded"
@@ -120,7 +120,7 @@ export default function About() {
                 />
               </Flex>
             )}
-            <Heading className={styles.textAlign} variant="display-strong-xl">
+            <Heading className={styles.textAlign} variant="display-strong-l">
               {person.name}
             </Heading>
             <Text
@@ -144,7 +144,7 @@ export default function About() {
                           label={item.name}
                           size="s"
                           weight="default"
-                          variant="secondary"
+                          variant="primary"
                         />
                         <IconButton
                           className="s-flex-show"
@@ -162,7 +162,7 @@ export default function About() {
           </Column>
 
           {about.intro.display && (
-            <Column textVariant="body-default-l" fillWidth gap="m" marginBottom="xl">
+            <Column textVariant="body-default-l" fillWidth gap="m" marginBottom="xl" onBackground="info-strong">
               {about.intro.description}
             </Column>
           )}
@@ -176,7 +176,7 @@ export default function About() {
                 {about.work.experiences.map((experience, index) => (
                   <Column key={`${experience.company}-${experience.role}-${index}`} fillWidth>
                     <Flex fillWidth horizontal="space-between" vertical="end" marginBottom="4">
-                      <Text id={experience.company} variant="heading-strong-l">
+                      <Text id={experience.company} variant="heading-strong-l" onBackground="info-strong">
                         {experience.company}
                       </Text>
                       <Text variant="heading-default-xs" onBackground="neutral-weak">
@@ -191,7 +191,8 @@ export default function About() {
                         <Text
                           as="li"
                           variant="body-default-m"
-                          key={`${experience.company}-${index}`}
+                          key={`${experience.company}-${index}`} 
+                          onBackground="info-strong"
                         >
                           {achievement}
                         </Text>
@@ -231,16 +232,16 @@ export default function About() {
 
           {about.studies.display && (
             <>
-              <Heading as="h2" id={about.studies.title} variant="display-strong-s" marginBottom="m">
+              <Heading as="h3" id={about.studies.title} variant="display-strong-s" marginBottom="m" onBackground="warning-strong">
                 {about.studies.title}
               </Heading>
               <Column fillWidth gap="l" marginBottom="40">
                 {about.studies.institutions.map((institution, index) => (
                   <Column key={`${institution.name}-${index}`} fillWidth gap="4">
-                    <Text id={institution.name} variant="heading-strong-l">
+                    <Text id={institution.name} variant="heading-strong-m" onBackground="info-strong">
                       {institution.name}
                     </Text>
-                    <Text variant="heading-default-xs" onBackground="neutral-weak">
+                    <Text variant="body-default-l" onBackground="neutral-weak">
                       {institution.description}
                     </Text>
                   </Column>
