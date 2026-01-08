@@ -4,6 +4,7 @@ import { Fade, Flex, Line, ToggleButton } from "@once-ui-system/core";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useDockEffect } from "@/components/animations/header/useDockEffect";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { about, display, gallery, person, routes, work } from "@/resources";
 import styles from "./Header.module.scss";
@@ -14,7 +15,6 @@ type TimeDisplayProps = {
   locale?: string;
 };
 
-// ✅ PERFORMANCE FIX: useRef + cleanup
 const TimeDisplay: React.FC<TimeDisplayProps> = ({ timeZone, locale = "en-GB" }) => {
   const [currentTime, setCurrentTime] = useState("");
   const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -44,12 +44,16 @@ export default TimeDisplay;
 
 export const Header = () => {
   const pathname = usePathname() ?? "";
-  
-  // 🎯 INSPIRED: Smart compact behavior
   const [isCompact, setIsCompact] = useState(false);
   const lastScrollY = useRef(0);
 
-  // ⚡ PERFORMANCE: Throttled scroll with RAF
+  // 🎯 DOCK EFFECT INTEGRATION
+  const dockRef = useDockEffect({
+    minSize: 48,
+    maxSize: 68, // Reducido de 80 para efecto más sutil
+    itemSelector: "[data-dock-item]",
+  });
+
   const handleScroll = useCallback(() => {
     const currentScrollY = window.scrollY;
     const scrollDelta = Math.abs(currentScrollY - lastScrollY.current);
@@ -100,90 +104,98 @@ export const Header = () => {
         {/* 🧭 MAIN NAV - Enhanced */}
         <Flex fillWidth horizontal="center">
           <Flex
+            ref={dockRef}
             background="page"
             border="neutral-alpha-weak"
             radius="m-4"
             shadow="l"
-            padding={isCompact ? "2" : "4"} // 🎯 INSPIRED: Dynamic padding
+            padding={isCompact ? "2" : "4"}
             horizontal="center"
             zIndex={1}
-            className="transition-all duration-300 hover:scale-[1.02]"
+            className={`${styles.dock} transition-all duration-300`}
           >
             <Flex 
-              gap={isCompact ? "2" : "4"} // 🎯 INSPIRED: Dynamic gap
+              gap={isCompact ? "2" : "4"}
               vertical="center" 
               textVariant="body-default-s" 
               suppressHydrationWarning
             >
               {routes["/"] && (
-                <ToggleButton 
-                  prefixIcon="home" 
-                  href="/" 
-                  selected={pathname === "/"} 
-                  className={`transition-transform duration-200 hover:scale-110`}
-                />
+                <div data-dock-item>
+                  <ToggleButton 
+                    prefixIcon="home" 
+                    href="/" 
+                    selected={pathname === "/"} 
+                  />
+                </div>
               )}
               
               {!isCompact && <Line background="neutral-alpha-medium" vert maxHeight="24" />}
               
               {routes["/about"] && (
                 <>
-                  <ToggleButton
-                    className={`s-flex-hide transition-transform duration-200 hover:scale-110`}
-                    prefixIcon="person"
-                    href="/about"
-                    label={isCompact ? undefined : about.label} // 🎯 INSPIRED: Hide labels
-                    selected={pathname === "/about"}
-                  />
-                  <ToggleButton
-                    className="s-flex-show"
-                    prefixIcon="person"
-                    href="/about"
-                    selected={pathname === "/about"}
-                  />
+                  <div data-dock-item className="s-flex-hide">
+                    <ToggleButton
+                      prefixIcon="person"
+                      href="/about"
+                      label={isCompact ? undefined : about.label}
+                      selected={pathname === "/about"}
+                    />
+                  </div>
+                  <div data-dock-item className="s-flex-show">
+                    <ToggleButton
+                      prefixIcon="person"
+                      href="/about"
+                      selected={pathname === "/about"}
+                    />
+                  </div>
                 </>
               )}
               
               {routes["/work"] && (
                 <>
-                  <ToggleButton
-                    className={`s-flex-hide transition-transform duration-200 hover:scale-110`}
-                    prefixIcon="grid"
-                    href="/work"
-                    label={isCompact ? undefined : work.label} // 🎯 INSPIRED: Hide labels
-                    selected={pathname.startsWith("/work")}
-                  />
-                  <ToggleButton
-                    className="s-flex-show"
-                    prefixIcon="grid"
-                    href="/work"
-                    selected={pathname.startsWith("/work")}
-                  />
+                  <div data-dock-item className="s-flex-hide">
+                    <ToggleButton
+                      prefixIcon="grid"
+                      href="/work"
+                      label={isCompact ? undefined : work.label}
+                      selected={pathname.startsWith("/work")}
+                    />
+                  </div>
+                  <div data-dock-item className="s-flex-show">
+                    <ToggleButton
+                      prefixIcon="grid"
+                      href="/work"
+                      selected={pathname.startsWith("/work")}
+                    />
+                  </div>
                 </>
               )}
               
               {routes["/gallery"] && (
                 <>
-                  <ToggleButton
-                    className={`s-flex-hide transition-transform duration-200 hover:scale-110`}
-                    prefixIcon="gallery"
-                    href="/gallery"
-                    label={isCompact ? undefined : gallery.label} // 🎯 INSPIRED: Hide labels
-                    selected={pathname.startsWith("/gallery")}
-                  />
-                  <ToggleButton
-                    className="s-flex-show"
-                    prefixIcon="gallery"
-                    href="/gallery"
-                    selected={pathname.startsWith("/gallery")}
-                  />
+                  <div data-dock-item className="s-flex-hide">
+                    <ToggleButton
+                      prefixIcon="gallery"
+                      href="/gallery"
+                      label={isCompact ? undefined : gallery.label}
+                      selected={pathname.startsWith("/gallery")}
+                    />
+                  </div>
+                  <div data-dock-item className="s-flex-show">
+                    <ToggleButton
+                      prefixIcon="gallery"
+                      href="/gallery"
+                      selected={pathname.startsWith("/gallery")}
+                    />
+                  </div>
                 </>
               )}
               
               {display.themeSwitcher && (
                 <>
                   {!isCompact && <Line background="neutral-alpha-medium" vert maxHeight="24" />}
-                  <div className="transition-transform duration-200 hover:scale-110">
+                  <div data-dock-item>
                     <AnimatedThemeToggler className="p-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors" />
                   </div>
                 </>

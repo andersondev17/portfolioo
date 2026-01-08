@@ -13,6 +13,17 @@
     mask-size: 100% 100%;
 }
 
+.dock {
+  position: relative;
+  will-change: transform;
+  
+  [data-dock-item] {
+    display: inline-block;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+}
 @media (max-width: breakpoints.$s) {
     .position {
         top: auto;
