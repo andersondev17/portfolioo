@@ -6,7 +6,7 @@ import { Avatar, Badge, Button, Column, Flex, Heading, RevealFx, Row, Schema, Te
 
 export default function Home() {
   return (
-    <Column maxWidth="m" gap="xl" horizontal="center">
+    <Column maxWidth="l" gap="xl" horizontal="center">
       <Schema
         as="webPage"
         baseURL={baseURL}
@@ -20,24 +20,24 @@ export default function Home() {
           image: `${baseURL}${person.avatar}`,
         }}
       />
-      
+
       <Flex
         fillWidth
         paddingY="24"
         gap="xl"
-        direction="row" // Horizontal en desktop
-        mobileDirection="column" // Stack en mobile
+        direction="row"
+        mobileDirection="column"
         vertical="center"
       >
         {/* Columna izquierda */}
         <Column maxWidth="s" gap="m">
           {home.featured.display && (
-          <RevealFx fillWidth horizontal="start" paddingTop="16" paddingBottom="32" paddingLeft="12">
-            <Badge background="brand-alpha-medium" paddingX="12" paddingY="4" onBackground="neutral-strong" textVariant="label-default-s" arrow={false}
-              href={home.featured.href}>
-              <Row paddingY="2">{home.featured.title}</Row>
-            </Badge>
-          </RevealFx>
+            <RevealFx fillWidth horizontal="start" paddingTop="16" paddingBottom="32" paddingLeft="12">
+              <Badge background="brand-alpha-medium" paddingX="12" paddingY="4" onBackground="neutral-strong" textVariant="label-default-s" arrow={false}
+                href={home.featured.href}>
+                <Row paddingY="2">{home.featured.title}</Row>
+              </Badge>
+            </RevealFx>
           )}
           <RevealFx translateY="4" fillWidth horizontal="start" paddingBottom="16">
             <Heading wrap="balance" variant="display-strong-m">
@@ -54,7 +54,7 @@ export default function Home() {
               id="about"
               data-border="rounded"
               href={about.path}
-              variant="secondary"
+              variant="primary"
               size="m"
               weight="default"
               arrowIcon
@@ -80,6 +80,7 @@ export default function Home() {
       </Flex>
       
       <RevealFx translateY="16" delay={0.6}>
+        <Projects range={[1, 1]} />
         <Projects range={[1, 1]} />
       </RevealFx>
 
