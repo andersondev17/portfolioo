@@ -25,8 +25,8 @@ export default function Home() {
         fillWidth
         paddingY="24"
         gap="xl"
-        direction="row"
-        mobileDirection="column"
+        direction="row" // Horizontal en desktop
+        mobileDirection="column" // Stack en mobile
         vertical="center"
       >
         {/* Columna izquierda */}
@@ -79,8 +79,7 @@ export default function Home() {
         </Column>
       </Flex>
       
-      <RevealFx translateY="16" delay={0.6}>
-        <Projects range={[1, 1]} />
+      <RevealFx translateY="16" delay={0.6}>   
         <Projects range={[1, 1]} />
       </RevealFx>
 
