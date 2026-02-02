@@ -91,20 +91,32 @@ const about: About = {
         I'm a Colombia-based software developer who got into coding out of curiosity,
         -Wondering why some websites felt like they were stuck in 90' while others looked like pure magic.
         <br />
-        I focus heavily on real results. My latest e-commerce project improved
-        engagement by 30%—not because I used React (which I obviously did), but because I understood that
-        behind every click is someone trying to buy anything at 2am.
+        
+        That curiosity shaped how I work.
+        I try to understand the problem before touching the code.
+        Tools matter, but clarity matters more.
         <br />
-         I like taking ideas from the first concept all
-        the way to a polished product—whether that means designing a clean React interface or structuring reliable
-        backend microservices or server actions.
+
+        My most recent project is an AI-powered learning companion built with
+        React, TypeScript, and Supabase. It adapts to users in real time
+        <br />
+
+        I enjoy taking ideas from their first rough version
+        all the way to a polished product.
+        That means designing clean React interfaces,
+        structuring reliable backend services,
+        and making decisions that balance speed with long-term stability.
+        <br />
+
+        When things are ambiguous, I don’t wait for perfect instructions.
+        I ask questions, test assumptions, and take ownership.
         <br />
         My goal is always the same: create fast, scalable, and meaningful tools that people actually enjoy using.
       </>
     ),
   },
   work: {
-    display: true, 
+    display: true,
     title: "Work Experience",
     experiences: [
       {
@@ -113,7 +125,7 @@ const about: About = {
         role: "Data Analyst",
         achievements: [
           <>
-            Developed TypeScript APIs integrating legacy database systems with modern React frontend, reducing data entry time by 40%. 
+            Developed TypeScript APIs integrating legacy database systems with modern React frontend, reducing data entry time by 40%.
           </>,
           <>
             Worked across technical and operational workflows, including documentation validation, compliance checks, and internal tooling.
@@ -134,14 +146,17 @@ const about: About = {
       {
         name: "Meta",
         description: <>Meta Front-End Developer Professional Certificate, Remote <br />
-                       Meta Programming with JavaScript, Remote
-                       Meta HTML and CSS certification, Remote
-                </>,
+          Meta Programming with JavaScript, Remote
+          Meta HTML and CSS certification, Remote
+          How to solve problems and make decisions effectively, Remote
+          Technical Support, Remote
+
+        </>,
       },
       {
         name: "Colombo Americano",
         description: <>Ingles C1, Medellín, Antioquia.  (2019)</>,
-      }, 
+      },
     ],
   },
 };
