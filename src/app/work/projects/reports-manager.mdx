@@ -1,0 +1,49 @@
+---
+title: "Diagnostic Report Manager"
+publishedAt: "2026-02-05"
+summary: "A modern React application demonstrating clean architecture, SOLID principles, and advanced frontend patterns for managing diagnostic reports at scale."
+images:
+  - "/images/projects/project-02/manager.webp"
+  - "/images/projects/project-02/manager2.webp"
+
+ 
+team:
+  - name: "Anderson"
+    role: "Full Stack Engineer"
+    avatar: "/images/avatar.jpg"
+    linkedIn: "https://www.linkedin.com/in/andersonlopezmartinez/"
+link: "https://diagnostic-report-manager-tawny.vercel.app/"
+---
+
+## Overview
+
+**Diagnostic Report Manager** is a React application built with TypeScript, Next.js, and Tailwind CSS. It demonstrates **clean architecture, SOLID principles, and modern frontend patterns** for managing diagnostic reports efficiently and at scale. The app emphasizes maintainability, type safety, and high performance.
+
+## Key Features
+
+- **Upload Form (POST Simulation):** Multi-file drag & drop, type validation via Strategy Pattern, real-time progress, error recovery, and full ARIA accessibility.
+- **Dynamic Report Management:** Server-side filtering & pagination, real-time search, sortable accessible tables, responsive cards, and helpful empty states.
+- **Reusable Utilities:** `cn()` for clean Tailwind class management, `getReportColor()` for strategy-based UI mapping, `formatDate()` with `date-fns`.
+- **UX & Accessibility:** Keyboard-friendly navigation, focus management, ARIA labels, modular reusable components.
+
+## Architecture & Design
+
+- **Layered Separation:** UI → Orchestration → Business Logic → Technical Infrastructure
+- **Key Patterns:** Strategy Pattern, Facade Pattern, Column Strategy, Server Actions
+- **State Management:** Zustand for efficient global state without Provider hell
+- **Performance:** Server-side rendering, memoization, code splitting, and lazy loading
+
+## Technologies Used
+
+- **Frontend:** Next.js 16.1, React 19.2, TypeScript, Tailwind CSS
+- **State Management:** Zustand
+- **Architecture:** Clean Architecture, SOLID Principles
+- **Patterns:** Strategy, Facade, Column Strategy
+- **Testing & Dev Tools:** Type-safe components, no `any` types in production
+
+## Project Impact
+
+- **Maintainable & Extensible:** Easy to add new file types or features without touching existing code
+- **Performance Optimized:** SSR and memoization improve load times and responsiveness
+- **Accessible:** Full keyboard and screen reader support, ARIA-compliant components
+- **Scalable:** Designed to manage large datasets and files efficiently
