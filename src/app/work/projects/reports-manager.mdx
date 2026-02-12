@@ -17,7 +17,40 @@ link: "https://diagnostic-report-manager-tawny.vercel.app/"
 
 ## Overview
 
-**Diagnostic Report Manager** is a React application built with TypeScript, Next.js, and Tailwind CSS. It demonstrates **clean architecture, SOLID principles, and modern frontend patterns** for managing diagnostic reports efficiently and at scale. The app emphasizes maintainability, type safety, and high performance.
+This project was built as a technical challenge focused on evaluating architectural decision-making, accessibility, performance optimization, and scalability in enterprise-level React applications.
+The primary goal was not just feature completion, but demonstrating production-grade frontend architecture with strong separation of concerns and render optimization.
+
+## Problem
+
+The challenge required building a diagnostic report manager with:
+
+- Mocked API interactions
+- Real-time filtering
+- Simulated file uploads with progress
+- Full accessibility compliance (A11Y)
+- Enterprise scalability considerations
+
+Additionally, strict attention to referential identity and render optimization was required.
+
+## Architectural Approach
+
+Instead of focusing only on UI implementation, I designed the system around:
+
+- Layered Architecture (UI → Orchestration → Domain → Infrastructure)
+- Clear separation between logic and presentation
+- Extensible design patterns to avoid conditionals and duplication
+
+
+##Scalability Discussion (1GB+ Uploads)
+
+The current architecture supports extension toward:
+
+- Chunked uploads
+- Direct-to-cloud uploads (S3 / Blob storage)
+- Resumable uploads
+- Background workers
+
+Because upload logic is fully decoupled from UI, these improvements require minimal refactoring.
 
 ## Key Features
 
@@ -33,6 +66,13 @@ link: "https://diagnostic-report-manager-tawny.vercel.app/"
 - **State Management:** Zustand for efficient global state without Provider hell
 - **Performance:** Server-side rendering, memoization, code splitting, and lazy loading
 
+| Decision | Rationale | Benefit |
+|--------|-----------|---------|
+| Zustand over Redux | Less boilerplate, simpler mental model | Faster development, better DX |
+| Server Actions | Type-safe data fetching | Reduced client JS, better SSR |
+| Strategy Pattern | Avoid conditionals for file types | Easy extensibility |
+
+
 ## Technologies Used
 
 - **Frontend:** Next.js 16.1, React 19.2, TypeScript, Tailwind CSS
@@ -42,6 +82,9 @@ link: "https://diagnostic-report-manager-tawny.vercel.app/"
 - **Testing & Dev Tools:** Type-safe components, no `any` types in production
 
 ## Project Impact
+
+This architecture mirrors real-world enterprise requirements such as
+multi-team scalability, long-term maintainability, and strict accessibility standards.
 
 - **Maintainable & Extensible:** Easy to add new file types or features without touching existing code
 - **Performance Optimized:** SSR and memoization improve load times and responsiveness

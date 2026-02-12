@@ -23,25 +23,32 @@ topics:
 
 ## Overview
 
-**Saas Learning Companion App** is an AI-powered Learning Management System (LMS) designed to adapt to the learner, not just the syllabus. It combines interactive learning sessions with a personal AI companion that tailors content and engagement to each user.
+**The SaaS Learning Companion App is an AI-powered Learning Management System (LMS) designed to adapt learning experiences to individual users rather than static curricula.
+The platform combines interactive learning sessions with a personalized AI voice companion, focusing on scalability, maintainability, and production readiness.
 
-The app features secure authentication, subscription management, and error monitoring, creating a scalable, maintainable, and responsive platform.
+## Problem
+
+Traditional LMS platforms offer static content delivery with limited personalization and engagement, leading to poor user retention and low interaction.
+
+## Solution
+
+I designed and developed a production-ready LMS that integrates AI-driven voice interactions, secure authentication, subscription management, and real-time error monitoring to deliver adaptive and engaging learning experiences.
+
 
 ## Key Features
 
-- **AI Vocal Agent:** Delivers interactive learning sessions and responds to user inputs.  
+- **AI Vocal Agent:** Interactive voice-based learning sessions powered by 11ElevenLabs  
 - **Personalized Learning:** Learns the user’s style to adapt content dynamically.  
-- **User Authentication & Subscriptions:** Managed securely via **Clerk**.  
-- **Error Monitoring:** Real-time tracking and alerts using **Sentry**.  
-- **Interactive UX:** Smooth, accessible, and responsive interface built with Tailwind CSS.  
+- **User Authentication & Subscriptions:** ecure user authentication and subscription handling using Clerk.  
+- **Error Monitoring:** Real-time error tracking and observability implemented with Sentry..  
+- **Accessible & Responsive UI:** Built with Tailwind CSS and ShadCN/UI, optimized for accessibility (A11Y) and responsiveness.
 
-## Technologies Used
 
-- **Frontend:** Next.js, React, TypeScript, Tailwind CSS, ShadCN/UI  
-- **Backend / Services:** Supabase for database and auth integration  
-- **Authentication:** Clerk  
-- **AI Integration:** VAPI-AI for vocal AI interactions  
-- **Monitoring:** Sentry for error tracking  
+## Technical Decisions
+
+- Chose Next.js + TypeScript for scalability and maintainability.
+- Leveraged Supabase for backend services to reduce operational complexity while maintaining flexibility.
+- Integrated monitoring early to ensure production stability.
 
 ## Project Impact
 
@@ -49,6 +56,14 @@ The app features secure authentication, subscription management, and error monit
 - Simplified subscription and authentication flows.  
 - Delivered a scalable architecture for real-time AI-powered interactions.  
 - Provided a responsive and accessible UI for all devices.  
+
+## Technologies Used
+
+- **Frontend:** Next.js, React, TypeScript, Tailwind CSS, ShadCN/UI  
+- **Backend / Services:** Supabase for database and auth integration  
+- **Authentication:** Clerk  
+- **AI Integration:** VAPI-AI + 11ElevenLabs for vocal AI interactions  
+- **Monitoring:** Sentry for error tracking  
 
 ## Links
 
