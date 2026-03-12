@@ -1,0 +1,246 @@
+---
+title: "Keeperz — Real-Time Goalkeeper Marketplace"
+publishedAt: "2025-03-12"
+summary: "Full-stack two-sided marketplace connecting soccer captains with goalkeepers through a WebSocket pub/sub engine, role-based navigation, and a full match lifecycle — Next.js 15, Express, Drizzle ORM, PostgreSQL."
+status: "MVP — Live"
+
+team:
+  - name: "Anderson Lopez"
+    role: "Software Engineer & UI/UX Designer"
+    avatar: "/images/avatar.jpg"
+    linkedIn: "https://www.linkedin.com/in/andersonlopezmartinez/"
+
+images:
+  - "/images/projects/project-04/cover-01.webp"
+link: "https://keeperz-frontend.vercel.app"
+---
+
+## Overview
+
+Keeperz solves a hyper-specific pain point in amateur soccer: a captain can't find a goalkeeper 30 minutes before kick-off. The platform replaces WhatsApp group chaos with a structured real-time marketplace — captains post matches, goalkeepers receive live notifications and submit priced offers, the captain accepts the best fit.
+
+The system runs on two distinct user roles with divergent UX flows, a WebSocket pub/sub layer for instant event propagation, and a full match lifecycle (`scheduled → confirmed → live → finished`) that both roles navigate simultaneously, without a page refresh.
+
+The public landing page is built with
+
+---
+
+## Architecture
+
+Four decoupled layers with explicit domain boundaries:
+
+```
+┌───────────────────────────────────────────────────────────────────┐
+│  Frontend        Next.js 15 (App Router) · React 19 · TypeScript  │
+│  Real-time       WebSocket pub/sub · match-scoped rooms            │
+│  Backend         Express · Drizzle ORM · PostgreSQL               │
+│  Auth & Security Better Auth · Arcjet (at WS upgrade boundary)    │
+└───────────────────────────────────────────────────────────────────┘
+```
+
+**REST and WebSocket are not alternatives — they complement each other.**
+
+REST handles initial state hydration and mutations. WebSocket handles live deltas. The database is the single source of truth; the WS server is the distribution layer, nothing more.
+
+```
+REST  →  Creates the match · Fetches initial offer list · Loads app on first paint
+WS    →  Match created · Offer arrived · Match went live · Offer accepted
+```
+
+On reconnect, the client re-hydrates via REST first, then re-subscribes to its WS room — so a 10-second network drop never causes stale state.
+
+---
+
+## WebSocket Engine
+
+The most load-bearing decision in the system was rejecting Socket.io in favor of raw `ws`. More implementation surface, full protocol control, and zero hidden magic.
+
+### Handshake & Security Gate
+
+The connection starts as a standard HTTP request. When the client sends `Upgrade: websocket`, the server intercepts it at the `'upgrade'` event — before promoting the connection — to run Arcjet rate limiting and bot protection. If denied, the TCP socket is destroyed before any WebSocket frame is exchanged.
+
+```js
+server.on('upgrade', async (req, socket, head) => {
+    const decision = await wsArcjet.protect(req)
+    if (decision.isDenied()) {
+        socket.write('HTTP/1.1 429 Too Many Requests\r\n\r\n')
+        socket.destroy()
+        return
+    }
+    wss.handleUpgrade(req, socket, head, (ws) => wss.emit('connection', ws, req))
+})
+```
+
+Security at the upgrade boundary — the cheapest possible checkpoint before any persistent resource is allocated.
+
+### Backpressure & Selective Subscription
+
+Broadcasting every event to every connected client doesn't scale. A match with active offer churn would saturate connections for clients watching unrelated matches, building queue pressure until the server crashes under high-frequency broadcast load.
+
+The solution: **selective subscription**. Clients send a `subscribe` command before receiving any match-specific events. The server maintains a `Map<matchId, Set<socket>>` — one room per match, populated on demand, cleaned up on disconnect.
+
+```
+Client connects     → receives { type: 'welcome' }
+Client sends        → { type: 'subscribe', matchId: 123 }
+Server replies      → { type: 'subscribed', matchId: 123 }
+Server now only     → fans out match 123 events to this socket
+```
+
+Two broadcast channels with different scopes:
+
+- **`broadcastToAll`** — match discovery events (`match_created`). Every online goalkeeper needs to see new matches.
+- **`broadcastToMatch(matchId, payload)`** — offer and lifecycle events. Only subscribers for that specific match receive them.
+
+```js
+const matchSubscribers = new Map() // Map<matchId, Set<socket>>
+
+function subscribe(matchId, socket) {
+    if (!matchSubscribers.has(matchId)) matchSubscribers.set(matchId, new Set())
+    matchSubscribers.get(matchId).add(socket)
+}
+```
+
+On socket close, `cleanupSubscriptions` removes the socket from every room it joined — no ghost entries, no memory leak in the map.
+
+### Heartbeat & Reconnection
+
+A 30-second server-side ping/pong cycle detects dead connections. Sockets that miss a pong are terminated before they accumulate as silent ghost subscribers.
+
+The client implements exponential-backoff reconnection: delays start at 1s and cap at 30s. On reconnect, `socket.onopen` replays all `subscribe` messages from a persistent `subscribedMatchIdsRef` — rooms are restored transparently, with no user intervention required.
+
+---
+
+## Domain: Offer Flow
+
+The offer lifecycle is the core business logic:
+
+1. **Captain posts match** → `POST /matches` → `MATCH_CREATED` event → `broadcastToAll`
+2. **Goalkeeper submits offer** → `POST /matches/:id/offers` → `OfferService.createOffer()` → rule validation → `OFFER_CREATED` → `broadcastToMatch`
+3. **Captain accepts offer** → `PATCH /matches/:id/offers/:offerId/accept` → `acceptOfferTransaction()` — atomic: accept one, reject all others in a single DB transaction → `OFFER_ACCEPTED` + N × `OFFER_REJECTED` events
+4. **Match goes live** → `PATCH /matches/:id/live` → 30-minute gate enforced server-side → `MATCH_LIVE` event
+5. **Keeper marks finished** → `PATCH /matches/:id/finish` → verifies accepted offer ownership → `MATCH_FINISHED` event
+
+`OfferService` is the single enforcement point for all business rules: offer window validation, price range bounds, duplicate prevention, role checks, and self-offer prevention. Every violation throws a typed `DomainError` with a named code mapping 1:1 to a user-facing Spanish message in `DOMAIN_ERROR_MESSAGES`. No error string is hardcoded at the HTTP layer.
+
+A background scheduler (`startExpirationScheduler`) sweeps expired pending offers on a configurable interval, publishing `OFFER_EXPIRED` events for each affected record — keeping the offer table honest without client involvement.
+
+---
+
+## Data Model
+
+Two table categories with different access patterns — a static anchor and a dynamic event stream:
+
+```
+matches (Static Anchor)
+  id, userId, sport, status
+  matchStart, matchEnd, price, difficulty
+  locationName, locationAddress
+
+match_offers (Dynamic / Events)
+  id, matchId, keeperId
+  offeredPrice, estimatedArrival, status
+  expiresAt, respondedAt
+```
+
+`matches` is read-heavy and write-rare. `match_offers` carries the real-time event stream — high write frequency during the offer window, settled after acceptance.
+
+The schema enforces a partial unique index on `(matchId, keeperId) WHERE status IN ('pending', 'accepted')` — duplicate offers are rejected at the database level, not just the application level. `expiresAt` is computed at offer creation time; the expiration job targets this column directly with a bulk `UPDATE WHERE status = 'pending' AND expires_at < NOW()`.
+
+---
+
+## Frontend Architecture
+
+**Role-based navigation** — `ROLE_HOME` maps each `UserRole` to its entry route. `getHomeRouteForRole()` is the only function that computes post-auth redirect targets. No route string lives outside this file.
+
+**`useGoalkeeperAvailability`** — the availability toggle owns the entire WS + polling lifecycle. Toggle ON: `connect()` + `startPolling()`. Toggle OFF: `disconnect()` + `stopPolling()` + `resetTransient()`. The feed is passive by default — no connections open until the keeper explicitly goes online. State persists across page loads via `localStorage`.
+
+**`useWebSocket`** — owns the raw WebSocket lifecycle: open, reconnect (exponential backoff), subscribe replay on reconnect via `subscribedMatchIdsRef`, and unmount cleanup. `onMessage` is stored in a ref — the closure never goes stale without recreating the callback. This pattern emerged from discovering that `useEffectEvent` cannot be stored in a `Set` or passed to external hooks for later invocation from browser callbacks like `socket.onmessage`.
+
+**`useMatchRoom`** — orchestrates the organizer's offer inbox: REST hydration on mount, WS subscription for live events, and an `acceptOffer()` mutation. Effect 1 opens the TCP connection once; Effect 2 subscribes to the match room when `wsStatus === 'connected'`; Effect 4 REST-hydrates independently on mount. The reducer (`matchRoomreducer`) is the single source of truth for offer state; `router.refresh()` is deliberately not used here because it does not update client-managed state.
+
+**`ActiveMatchClient`** — lean orchestrator (~110 lines) + four focused UI components (`TimerDisplay`, `MatchStageCard`, `ActorCard`, `CTAZone`) + two timing hooks (`useCountdown` pre-match, `useStopwatch` in-progress). Glassmorphism design with an arena-stage layout.
+
+**`BottomDock` lifecycle sync** — reacts to match state from the moment a user has skin in the game: goalkeepers from offer submission, organizers from match creation. `MATCH_LIFECYCLE_STATUS` is the single const object for all domain state tokens. No magic strings anywhere in navigation or WS event routing.
+
+---
+
+## Key Engineering Decisions
+
+**`useCallback + sessionRef` over `useEffectEvent`** — `useEffectEvent` cannot be stored in a `Set` or invoked asynchronously from browser-native callbacks. `handleMessage` is `useCallback + sessionRef`; only `subscribeIfNeeded` uses `useEffectEvent`. The constraint is documented inline to prevent future regressions.
+
+**Arcjet at the WS upgrade boundary** — protection runs before the TCP connection is promoted to WebSocket. Rejected handshakes never reach the WS server. This is the correct security checkpoint — not a middleware after the connection is already open.
+
+**Drizzle + raw SQL hybrid** — Drizzle for standard CRUD; a raw `sql` template for the bulk expiration update. The hybrid avoids N+1 in the background job without giving up type safety elsewhere.
+
+**Screaming/feature-slice architecture** — codebase organized by domain (`matches`, `offers`, `hub`) not by technical layer. Each feature owns its types, services, hooks, and components. `offers` is the canonical reference implementation. Other features adopt the same structure only when they reach equivalent complexity — not by default.
+
+---
+
+## Landing Page
+
+The public landing page is a scroll-driven narrative built on GSAP Club plugins — not a marketing template.
+
+Six discrete sections, each with its own animation primitive: SVG path draw on `ProblemStatement`, polaroid-stack `ScrollTrigger` scrub on `RolesExplained`, particle burst via `Physics2DPlugin` on `OfferStorm`, `SplitText` character reveal on `ConfirmationMoment`, a live match ticker on `MatchLive`, and a spring CTA on the final section.
+
+GSAP is initialized once — `initializeGSAP()` guards against double-registration in React's strict-mode double-invoke — and exposes a `cleanupGSAP()` function that kills all `ScrollTrigger` instances on unmount. Two custom eases (`keeperzCardFlip`, `keeperzFloat`) encode the brand motion language centrally so individual components don't hardcode cubic-bezier strings.
+
+`SmoothScroller` wraps the entire page with `ScrollTrigger`'s `normalizeScroll` so momentum scrolling doesn't desync pinned sections on iOS.
+
+---
+
+## Challenges
+
+**30-minute live gate** — enforced server-side via timestamp comparison at the `/live` endpoint. Client-side scheduling would be manipulable. The gate lives where the data is.
+
+**Auth compatibility across devices** — Better Auth session state resolved differently between desktop and mobile. Server-side middleware redirects failed on mobile due to cookie timing on hard refresh. Migrated protected routes to client-side `useSession()` checks and removed edge middleware entirely. The fix surfaced a secondary issue: `router.push()` was called before the session promise resolved, so the redirect landed on a stale role. Solution: await session before computing `getHomeRouteForRole()`.
+
+**Match history and DataTable** — both roles needed a paginated, keyboard-navigable match history. Introduced a reusable `DataTable` component with WCAG 2.1 roving tabindex (`HistoryTabs`) shared across goalkeeper and organizer views. Backend: `GET /matches/my` returns role-scoped results via a single route with branching repository queries — no separate endpoints per role.
+
+---
+
+## Deployment
+
+<table>
+  <thead>
+    <tr><th>Service</th><th>Platform</th><th>Rationale</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Frontend</td><td>Vercel</td><td>Next.js-native, edge network, zero-config</td></tr>
+    <tr><td>Backend</td><td>Railway</td><td>Always-on Node.js — long-lived WS connections require a persistent process</td></tr>
+    <tr><td>Database</td><td>Supabase PostgreSQL</td><td>Managed Postgres, connection pooling</td></tr>
+  </tbody>
+</table>
+
+Railway over serverless for the backend: WebSocket connections are long-lived TCP connections. Serverless functions time out; a persistent Node.js process does not. Long-lived connections are a hard requirement, not a preference.
+
+---
+
+## Stack
+
+<table>
+  <thead>
+    <tr><th>Layer</th><th>Technology</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Frontend</td><td>Next.js 15 (App Router), React 19, TypeScript</td></tr>
+    <tr><td>Styling</td><td>Tailwind CSS, CSS custom properties, Glassmorphism design system</td></tr>
+    <tr><td>Real-time</td><td>WebSocket (`ws`), custom pub/sub, exponential-backoff reconnection</td></tr>
+    <tr><td>Backend</td><td>Express 5, Node.js, ES modules</td></tr>
+    <tr><td>Database</td><td>PostgreSQL, Drizzle ORM</td></tr>
+    <tr><td>Auth</td><td>Better Auth, session cookies</td></tr>
+    <tr><td>Security</td><td>Arcjet (rate limiting + bot protection at WS upgrade)</td></tr>
+    <tr><td>Validation</td><td>Zod (shared schemas across HTTP and WS layers)</td></tr>
+    <tr><td>Animation</td><td>Framer Motion, Lottie, GSAP (ScrollTrigger, SplitText, DrawSVG, MorphSVG, Physics2D, CustomEase)</td></tr>
+    <tr><td>Deployment</td><td>Vercel (frontend), Railway (backend), Supabase (DB)</td></tr>
+  </tbody>
+</table>
+
+---
+
+## Outcome
+
+The MVP validates the core marketplace loop end-to-end: a captain can post a match, receive goalkeeper offers in real time, accept one, and track the match through its full lifecycle — without a page refresh. The WS pub/sub layer handles concurrent users subscribed to the same match room with no race conditions in the offer acceptance transaction.
+
+The selective subscription model means the server only fans out what each client actually needs. The REST + WS complementarity means a reconnected client never serves stale state. These two patterns together are what makes the real-time experience feel native rather than bolted on.
+
+Stress-tested at **1,000 matches + 1,000 events in under 3 seconds** during load testing — the same architecture that proved out in the Scorez prototype carried directly into production.

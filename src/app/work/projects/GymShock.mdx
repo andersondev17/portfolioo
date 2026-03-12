@@ -1,55 +1,98 @@
 ---
-title: "GymShock: Fitness Platform"
+title: "GymShock — Boxing Fitness Platform"
 publishedAt: "2025-08-22"
-summary: "AI-Driven Mobile Fitness platform. Focused on addressing the lack of access to structured training and safe technical progression."
-status: "In Development - Core MVP Functional"
+summary: "AI-powered mobile platform that uses real-time computer vision to analyze boxing technique, deliver personalized feedback, and connect athletes with certified coaches — built offline-first with React Native, FastAPI, and MediaPipe."
+status: "In Development — Core MVP Functional"
 
 team:
   - name: "Anderson Lopez"
-    role: "Software Engineer & UI/UXDesigner"
+    role: "Software Engineer & UI/UX Designer"
     avatar: "/images/avatar.jpg"
     linkedIn: "https://www.linkedin.com/in/andersonlopezmartinez/"
 
 images:
   - "/images/projects/project-01/cover-04.png"
   - "/images/projects/project-01/video-01.mp4"
-link: "https://https://github.com/andersondev17/mobile-boxing-app"
 ---
-
 
 ## Overview
 
-GymShock is an AI-driven mobile fitness platform designed to democratize access to structured boxing training, combining computer vision, personalized progression, and community-based accountability to reduce injuries, improve retention, and generate measurable health impact.
+GymShock is an offline-first mobile platform that delivers structured boxing training through real-time computer vision, wearable data integration, and community-driven accountability. The system analyzes posture and punching technique directly from the device camera — no additional hardware required — and generates personalized feedback to reduce injury risk and improve long-term retention.
 
-**Current Status:** an offline-first mobile platform for boxing technique analysis and progress tracking using computer vision and wearable data.
-
-## Key Features
-
-- **AI-Driven Training Progression**: Personalized technical progression powered by computer-vision-assisted analysis and adaptive training logic to reduce injury risk and support long-term retention.
-- **High-Performance Mobile Vision Pipeline**: High-FPS camera pipelines built with React Native and Android Studio to support real-time computer vision features.
-- **Secure User Infrastructure**: Secure authentication and persistent session management using Zustand, designed for scalable user growth.
-- **Inclusive Design System**: Centralized Tailwind CSS tokens for consistency across the app, ensuring accessibility and responsive design that works for users on any device and level of technical competence.
-- **Impact Measurement Framework**: Built-in metrics to track technical progress, retention, and health indicators to support evidence-based evaluation.*
-
-## Technologies and tools used to bring this project to life
-
-- **Mobile**: React Native (Expo), Drizzle ORM, SQLite, TypeScript.
-- **Backend**: FastAPI, SQLAlchemy, PostgreSQL, OpenCV, MediaPipe
-- **Design**: Centralized token system enabling scalable theming and consistent user experience following the Figma design
-- **Real-Time & Streaming Data (Planned / In Progress)**: Kafka, Spark Streaming, Databricks, Azure Data Lake
-
-## Challenges and Learnings
-
-The primary challenge was not technical, but human. Research revealed that over 70% of individuals abandon exercise routines due to psychological barriers rather than lack of access. This required designing the platform around safe progression, confidence-building, and community trust, rather than traditional performance-driven fitness models.
-
-On the technical side, delivering high-FPS mobile computer vision while maintaining performance, battery efficiency, and session stability required careful pipeline optimization and close collaboration with data and backend teams.
-## Outcome
-
-GymShock demonstrates how AI-driven mobile technology can bridge the gap between informal sports practice and structured, scalable health interventions. The platform lays the groundwork for measurable impact in injury prevention and retention.
-**Project Impact**: Reduces injury risk via structured, validated technical progression
-
-**Technical Achievements**: AI-integrated mobile architecture supporting computer vision features
-
-Modular architecture designed for pilot validation and future public-private partnerships
+The project targets a concrete public health problem: **26% adult obesity rate** and **70% exercise abandonment** in Colombian urban communities, where informal sports practice lacks technical structure and measurable progression.
 
 ---
+
+## Architecture
+
+The platform is composed of four decoupled layers, each with a clearly defined responsibility:
+
+```
+┌─────────────────────────────────────────────────────┐
+│  Mobile Layer        React Native (Expo) + SQLite    │
+│  Computer Vision     OpenCV + MediaPipe + PyGame     │
+│  Backend API         FastAPI + PostgreSQL            │
+│  Streaming Pipeline  Kafka → Spark → Azure Data Lake │
+└─────────────────────────────────────────────────────┘
+```
+
+**Offline-first design**: The mobile layer operates fully without a network connection using SQLite (via Drizzle ORM) for local storage of the exercise catalog and session data. Synchronization to the backend happens asynchronously when connectivity is available.
+
+**Vision pipeline**: Each video frame is processed by OpenCV for preprocessing (resize, normalize, color transform), then passed to MediaPipe for landmark extraction (33 body keypoints). Derived angles and distances feed a rule-based classifier that detects technique errors in real time and triggers PyGame feedback overlays.
+
+**Async data pipeline**: Session events are published to Kafka topics, consumed by Spark Streaming for rolling averages and anomaly detection, and persisted in Azure Data Lake under a medallion architecture (bronze → silver → gold). Databricks notebooks handle exploratory analysis and model iteration.
+
+---
+
+## Key Technical Decisions
+
+**React Native + Expo over Flutter** — TypeScript ecosystem alignment with the backend tooling, faster iteration on camera APIs, and better support for the Drizzle ORM / SQLite offline layer.
+
+**MediaPipe over custom model** — Deployed in under a sprint with production-grade accuracy. The architecture is designed to swap it for a fine-tuned YOLO model once a labeled boxing dataset is available.
+
+**FastAPI over Django/Express** — Async-native, automatic OpenAPI generation, and Pydantic validation aligned with the data contracts already defined in TypeScript on the mobile side.
+
+**Kafka over direct DB writes** — Decouples the mobile client from backend processing latency. The streaming layer can evolve independently without touching the client contract.
+
+---
+
+## Features Implemented (MVP)
+
+- **Real-time pose analysis** — MediaPipe landmark extraction at target FPS with visual feedback overlay via PyGame
+- **Offline exercise catalog** — SQLite-backed, fully navigable without internet; trending exercises computed from local search history
+- **Secure auth + session management** — JWT authentication with Zustand-persisted session state
+- **Wearable integration (in progress)** — WearOS-first implementation; abstraction layer planned for Garmin and Apple Watch
+- **Coach discovery** — Location-aware search to connect athletes with certified local coaches
+- **Gamification layer** — Achievement system and progress tracking to address the retention/abandonment problem
+
+---
+
+## Challenges
+
+**Real-time CV on mobile** — Maintaining target FPS while running MediaPipe inference on mid-range Android devices required frame-drop strategies, resolution downsampling for the analysis pipeline (separate from the preview), and careful memory management to avoid GC pressure during sessions.
+
+**Offline-first sync** — Designing a conflict-free sync strategy between local SQLite state and the PostgreSQL backend without a dedicated sync framework. The solution uses a timestamp-based last-write-wins policy for session data and server-authoritative resolution for catalog updates.
+
+**Human factors over technical ones** — User research showed the core problem was psychological (confidence, fear of injury, lack of visible progress) rather than technical access. This reframed the UX: the CV feedback system was redesigned to emphasize positive reinforcement and incremental correction rather than error counting.
+
+---
+
+## Stack
+
+| Layer | Technology |
+|---|---|
+| Mobile | React Native, Expo, TypeScript, Drizzle ORM, SQLite |
+| Computer Vision | OpenCV, MediaPipe, PyGame |
+| Backend | FastAPI, SQLAlchemy, PostgreSQL |
+| Auth | JWT, Zustand |
+| Streaming | Kafka, Spark Streaming |
+| Data Platform | Azure Data Lake, Databricks, Delta Lake |
+| Design | Figma, centralized Tailwind token system |
+
+---
+
+## Outcome
+
+The MVP validates that a single mobile device camera is sufficient for actionable boxing technique feedback — no wearables, no gym equipment, no subscription required for the core value. The modular architecture supports a pilot with the Liga de Boxeo de Belén (Medellín) and is structured for public-private partnership expansion to other cities.
+
+**Measurable targets:** ≥30% reduction in posture errors after 4 sessions · ≥60% 3-month retention vs. 30% baseline · pilot with ≥10 athletes before scaling.
